@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './SearchBox.css';
+import {findMovies} from "../../store/store"
 
-class SearchBox extends Component {
+class _SearchBox extends Component {
     state = {
         searchLine: ''
     }
@@ -10,6 +12,8 @@ class SearchBox extends Component {
     }
     searchBoxSubmitHandler = (e) => {
         e.preventDefault();
+        let data = new FormData(e.target)
+        this.props.dispatch(findMovies(data.get("searchLine")));
     }
     render() {
         const { searchLine } = this.state;
@@ -22,6 +26,7 @@ class SearchBox extends Component {
                         <input
                             value={searchLine}
                             type="text"
+                            name="searchLine"
                             className="search-box__form-input"
                             placeholder="Например, Shawshank Redemption"
                             onChange={this.searchLineChangeHandler}
@@ -39,5 +44,5 @@ class SearchBox extends Component {
         );
     }
 }
- 
+let SearchBox = connect()(_SearchBox)
 export default SearchBox;

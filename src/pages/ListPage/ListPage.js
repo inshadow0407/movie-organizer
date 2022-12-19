@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import './ListPage.css';
 
 class ListPage extends Component {
-    state = {
-        movies: [
-            { title: 'The Godfather', year: 1972, imdbID: 'tt0068646' }
-        ]
-    }
+    
     componentDidMount() {
         //const id = this.props.match.params;
         //console.log(id);

@@ -16,6 +16,10 @@
 .favorites__list {
     margin-bottom: 24px;
 }
+.remove{
+    width: min-content;
+    padding: 5px;
+}
 
 .favorites__save {
     border: none;
