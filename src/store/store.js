@@ -3,48 +3,23 @@ import { applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 
 let initialState  = {
-    Title: "Новый Список",
-    movies: [
-        { Title: 'The Godfather', Year: 1972, imdbID: 'tt0068646' }
-    ],
+    Title: "Новый список",
+    movies: [],
     list:{}
 }
 let searchResult =
     { 
         status:"fullfilled",
-        movies: [
-            {
-                imdbID: 'tt3896198',
-                Title: "Guardians of the Galaxy Vol. 2",
-                Year: 2017,
-                Poster: "https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg"
-
-            },
-            {
-                imdbID: 'tt0068646',
-                Title: "The Godfather",
-                Year: 1972,
-                Poster: "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg"
-
-            },
-            
-
-        ]
+        movies: []
     }
-
+    //GET запрос для поиска фильма на сервере params=слово по которому ведется поиск
 export let findMovies = (params)=>(dispatch)=>{
         dispatch({type:"LOADING"})
         fetch("http://www.omdbapi.com/?apikey=2ae0655b&s="+params)
         .then((response)=>response.json())
         .then(data=>dispatch({type:"FIND", payload:data}))
-        console.log(params);
-        console.log(
-            {
-            title:store.getState().favorites.Title, 
-            movies: [store.getState().favorites.movies.map((movie)=>movie.imdbID)]
-            }
-            );
 }
+//POST запрос для отправки списка на сервер и получения id
  export let saveList = ()=>(dispatch)=>{
     fetch("https://acb-api.algoritmika.org/api/movies/list", {
         method: 'POST',
@@ -54,21 +29,20 @@ export let findMovies = (params)=>(dispatch)=>{
         body: JSON.stringify(
             {
             title:store.getState().favorites.Title, 
-            movies: [store.getState().favorites.movies.map((movie)=>movie.imdbID)]
+            movies: store.getState().favorites.movies.map((movie)=>movie)
             }
             )
       })
     .then((response)=>response.json())
     .then(data=>{
-        console.log(data)
         dispatch({type:"SAVE", payload: data})
     })
     
 }
 
 let searchResultList=(state=searchResult,action)=>{
+    //Поиск фильма на сервере по введенному слову 
     if(action.type==="FIND"){
-        console.log(action.payload);
        return  {
         status:"fullfilled",
         movies:action.payload.Search
@@ -81,6 +55,7 @@ let searchResultList=(state=searchResult,action)=>{
 }
 
 let MovieList = (state=initialState,action)=>{
+    //добавление фильма в список
     if(action.type==="ADD"){
         if(state.movies.find((item)=>item.imdbID===action.payload.imdbID)){
             return state
@@ -93,13 +68,14 @@ let MovieList = (state=initialState,action)=>{
         }
     }
     }
+    //Добавление названия списка
     else if(action.type==="ADD_TITLE"){
         return {
             ...state,
             Title:action.payload}
     }
+    //удаление фильма из списка
     else if(action.type==="REMOVE"){
-        console.log(action.payload);
         return { 
             ...state,
            movies: state.movies.filter((movie)=>{
@@ -107,18 +83,25 @@ let MovieList = (state=initialState,action)=>{
         })
         }
     }
+    //сохранение id полученного списка в store
     else if(action.type==="SAVE"){
         return {
             ...state,
-            list: action.payload
+            list:{
+                id:action.payload.id,
+                title:action.payload.title,
+                mymovies:action.payload.movies.map((item)=>{
+                    return item
+                })
+            }
         }
     }
     else return state;
 }
-
+// создаю store 
 export const store = createStore(
   combineReducers({
-    favorites: MovieList,
+    favorites: MovieList, 
     searchResult:searchResultList
   }),applyMiddleware(thunk)
 );

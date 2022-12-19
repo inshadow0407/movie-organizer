@@ -3,22 +3,17 @@ import './ListPage.css';
 import { connect } from 'react-redux';
 
 class _ListPage extends Component {
-    
-    componentDidMount() {
-        //const id = this.props.match.params;
-        //console.log(id);
-        // TODO: запрос к сервер на получение списка
-        // TODO: запросы к серверу по всем imdbID
-    }
     render() { 
         return (
             <div className="list-page">
                 <h1 className="list-page__title">{this.props.favorites.list.title}</h1>
                 <ul>
-                    {this.props.favorites.list.movies.map((item) => {
+                    {this.props.favorites.list.mymovies.map((item) => {
+                        console.log(item[0]);
+                        console.log(item.Title);
                         return (
                             <li key={item.imdbID}>
-                                <a href="https://www.imdb.com/title/tt0068646/" target="_blank">{item.title} ({item.year})</a>
+                                <a href={`https://www.imdb.com/title/${item.imdbID}`}>{item.Title} ({item.Year})</a>
                             </li>
                         );
                     })}

@@ -20,16 +20,18 @@ class _Favorites extends Component {
                 }}/>
                 <ul className="favorites__list">
                     {this.props.favorites.movies.map((item) => {
+                        if(item.imdbID){
                         return <li key={item.imdbID}>{item.Title} ({item.Year})
                                     <button className="remove" 
                                         onClick={()=>{this.props.dispatch({type:"REMOVE", payload:item.Title})}}>
                                          X
                                     </button>
-                                </li>;
+                                </li>}
+                                else return null;
                     })}
                 </ul>
                 <button type="button" className="favorites__save" onClick={this.clickHandler}>Сохранить список</button>
-                {(this.props.favorites.list.id===undefined)? null: <Link to={"/list/"+this.props.favorites.list.id}>Мой список</Link>}
+                {(this.props.favorites.list.id===undefined)? null: <Link to={"/list/"+this.props.favorites.list.id}>{this.props.favorites.list.title}</Link>}
             </div>
         );
     }
