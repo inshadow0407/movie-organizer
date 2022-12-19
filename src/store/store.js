@@ -6,7 +6,8 @@ let initialState  = {
     Title: "Новый Список",
     movies: [
         { Title: 'The Godfather', Year: 1972, imdbID: 'tt0068646' }
-    ]
+    ],
+    list:{}
 }
 let searchResult =
     { 
@@ -37,8 +38,33 @@ export let findMovies = (params)=>(dispatch)=>{
         .then((response)=>response.json())
         .then(data=>dispatch({type:"FIND", payload:data}))
         console.log(params);
+        console.log(
+            {
+            title:store.getState().favorites.Title, 
+            movies: [store.getState().favorites.movies.map((movie)=>movie.imdbID)]
+            }
+            );
 }
-
+ export let saveList = ()=>(dispatch)=>{
+    fetch("https://acb-api.algoritmika.org/api/movies/list", {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+            title:store.getState().favorites.Title, 
+            movies: [store.getState().favorites.movies.map((movie)=>movie.imdbID)]
+            }
+            )
+      })
+    .then((response)=>response.json())
+    .then(data=>{
+        console.log(data)
+        dispatch({type:"SAVE", payload: data})
+    })
+    
+}
 
 let searchResultList=(state=searchResult,action)=>{
     if(action.type==="FIND"){
@@ -79,6 +105,12 @@ let MovieList = (state=initialState,action)=>{
            movies: state.movies.filter((movie)=>{
            if (movie.Title!==action.payload) return movie;
         })
+        }
+    }
+    else if(action.type==="SAVE"){
+        return {
+            ...state,
+            list: action.payload
         }
     }
     else return state;

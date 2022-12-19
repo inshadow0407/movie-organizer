@@ -13,7 +13,7 @@ import './common.css';
   mdf = JSON.stringify(this.tft);
   cdf =JSON.parse(this.mdf)
   render() {
-    console.log(this.props.favorites.title)
+    console.log(this.props.favorites.Title)
     console.log(this.cdf);
     return (<>
           

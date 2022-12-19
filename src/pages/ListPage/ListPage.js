@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './ListPage.css';
+import { connect } from 'react-redux';
 
-class ListPage extends Component {
+class _ListPage extends Component {
     
     componentDidMount() {
         //const id = this.props.match.params;
@@ -12,9 +13,9 @@ class ListPage extends Component {
     render() { 
         return (
             <div className="list-page">
-                <h1 className="list-page__title">Мой список</h1>
+                <h1 className="list-page__title">{this.props.favorites.list.title}</h1>
                 <ul>
-                    {this.state.movies.map((item) => {
+                    {this.props.favorites.list.movies.map((item) => {
                         return (
                             <li key={item.imdbID}>
                                 <a href="https://www.imdb.com/title/tt0068646/" target="_blank">{item.title} ({item.year})</a>
@@ -26,5 +27,8 @@ class ListPage extends Component {
         );
     }
 }
- 
+
+let ListPage = connect((state)=>({
+    favorites: state.favorites
+}))(_ListPage);
 export default ListPage;
