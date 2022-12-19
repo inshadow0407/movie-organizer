@@ -15,7 +15,7 @@ let searchResult =
     //GET запрос для поиска фильма на сервере params=слово по которому ведется поиск
 export let findMovies = (params)=>(dispatch)=>{
         dispatch({type:"LOADING"})
-        fetch("http://www.omdbapi.com/?apikey=2ae0655b&s="+params)
+        fetch("https://www.omdbapi.com/?apikey=2ae0655b&s="+params)
         .then((response)=>response.json())
         .then(data=>dispatch({type:"FIND", payload:data}))
 }
